@@ -1,10 +1,15 @@
 #!/bin/true
 
+# Compiler variables
 export STRAP_TARGET_ARCH="x86_64"
-export STRAP_TARGET_KARCH="amd64"
 export STRAP_TARGET_LLVM_BACKEND="X86"
 export STRAP_TARGET_CFLAGS="-march=haswell -mtune=skylake -O2 -fPIC -pipe -mprefer-vector-width=128"
 export STRAP_TARGET_CXXFLAGS="${STRAP_TARGET_CFLAGS}"
 export STRAP_TARGET_LDFLAGS=""
+
+# Toolchain variables
 export STRAP_TARGET_VENDOR=bootstrap
 export STRAP_TRIPLET_FULL="x86_64-${STRAP_TRIPLET_VENDOR}-linux"
+
+# Kernel variables
+export STRAP_TARGET_KARCH="x86_64"
