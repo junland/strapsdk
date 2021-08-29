@@ -3,17 +3,17 @@
 set -e
 
 source lib/libstep.sh
+source lib/libstrap.sh
 
 export LANG="C"
 export LC_ALL="C"
-export STRAP_CWD=$CWD
-export STRAP_SOURCES=$CWD/sources
-export STRAP_PATCHES=$CWD/patches
-export STRAP_BUILD=$CWD/build
-export STRAP_ROOTFS=$CWD/rootfs
-export STRAP_TARGET=${STRAP_TARGET:x86_64}
+export STRAP_CWD=$(pwd)
+export STRAP_SOURCES=$STRAP_CWD/sources
+export STRAP_PATCHES=$STRAP_CWD/patches
+export STRAP_BUILD=$STRAP_CWD/build
+export STRAP_ROOTFS=$STRAP_CWD/rootfs
+export STRAP_TARGET_ARCH=${STRAP_TARGET_ARCH:-x86_64}
 
-CWD=$(pwd)
 umask 022
 
 if [ "$1" == "" ]; then
@@ -25,7 +25,7 @@ export STRAP_SEL_CMD=$1
 
 case $STRAP_SEL_CMD in
   "stage0" | "stage1" | "stage2")
-    if ! test -d "${CWD}"/"${STRAP_SEL_CMD}"; then
+    if ! test -d "${STRAP_CWD}"/"${STRAP_SEL_CMD}"; then
       strap_msg_red "Can not execute $1, as the directory does not exist."
       exit 1
     fi
@@ -37,35 +37,45 @@ case $STRAP_SEL_CMD in
       exit 1
     fi
 
-    if ! test -f "${CWD}"/target/"${STRAP_TARGET}".tgt; then
+    if ! test -f "${STRAP_CWD}"/target/"${STRAP_TARGET_ARCH}".tgt; then
       strap_msg_red "$1 target file does not exist."
       exit 1
     fi
 
-    strap_msg "Starting execution of ${STRAP_SEL_CMD} with target of ${STRAP_TARGET}"
-    
-    sleep 3
+    strap_msg "Found target file: ${STRAP_CWD}/target/${STRAP_TARGET_ARCH}.tgt"
+
+    strap_msg "Creating needed directories..."
+
+    mkdir -vp "${STRAP_BUILD}" "${STRAP_ROOTFS}" "${STRAP_SOURCES}"
+
+    strap_msg "Starting execution of ${STRAP_SEL_CMD} with target of ${STRAP_TARGET_ARCH}"
 
     for step in $(cat "${STRAP_CWD}"/"${STRAP_STAGE}"/"${STRAP_STAGE}".order); do 
 
-      if ! test -f "${STRAP_CWD}"/"${STRAP_STAGE}"/"${step}".sh; then
+      if ! test -f "${STRAP_CWD}"/"${STRAP_STAGE}"/"${step}".step; then
         strap_msg_red "Step ${step} does not exist."
         exit 1
       fi
 
       strap_msg "Running ${step} step..."
 
-      source "${STRAP_CWD}"/"${STRAP_STAGE}"/"${step}".sh
+      source "${STRAP_CWD}"/"${STRAP_STAGE}"/"${step}".step
 
       for url in $source{1..99};do
-          strap_filedownload "$url" "$STRAP_SOURCES"/"$(basename "$url")" 5 5
+          strap_filedownload "$url" "$STRAP_SOURCES"/"$(basename "$url")" || exit 1
+          strap_fileunpack "$STRAP_SOURCES"/"$(basename "$url")" "$STRAP_BUILD" || exit 1
       done
 
     done
+
+    strap_msg "Execution of ${STRAP_SEL_CMD} with target of ${STRAP_TARGET_ARCH} finished."
+
+    exit 0
     ;;
   "clean")
     strap_msg "Cleaning up..."
     rm -rf "${STRAP_BUILD}" "${STRAP_ROOTFS}"
+    exit 0
     ;;
   *)
     strap_msg_red "Unknown command: $STRAP_SEL_CMD"

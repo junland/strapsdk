@@ -1,6 +1,6 @@
 name=headers
-version=0.8.0s
-source1="https://github.com/alacritty/alacritty/archive/v$version/$name-$version.tar.gz"
+version=5.13.6
+source1="https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-${version}.tar.xz"
 
 build() {
     cd linux-*
