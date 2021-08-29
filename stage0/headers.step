@@ -1,0 +1,20 @@
+name=headers
+version=0.8.0s
+source1="https://github.com/alacritty/alacritty/archive/v$version/$name-$version.tar.gz"
+
+build() {
+    cd linux-*
+
+    step_msg "Configuring headers"
+    
+    export ARCH="${SERPENT_TARGET_ARCH}"
+    make ARCH="${SERPENT_TARGET_ARCH}" mrproper
+    make ARCH="${SERPENT_TARGET_ARCH}" headers
+    find usr/include -name '.*' -delete
+    rm -vf usr/include/Makefile
+
+    step_msg "Installing headers"
+    
+    install -D -d -m 00755 "${SERPENT_INSTALL_DIR}/usr/include"
+    cp -Rv usr/include "${SERPENT_INSTALL_DIR}/usr/."
+}
