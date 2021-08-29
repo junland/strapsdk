@@ -34,8 +34,8 @@ case $STRAP_SEL_CMD in
 
     STRAP_STAGE=$STRAP_SEL_CMD
 
-    if test -z "${STRAP_TARGET}"; then
-      strap_msg_red "Please set STRAP_TARGET to build ${STRAP_STAGE}"
+    if test -z "${STRAP_TARGET_ARCH}"; then
+      strap_msg_red "Please set STRAP_TARGET_ARCH to build ${STRAP_STAGE}"
       exit 1
     fi
 

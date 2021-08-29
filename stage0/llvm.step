@@ -3,11 +3,7 @@ version=12.0.1
 source1="https://github.com/${name}/${name}-project/releases/download/llvmorg-12.0.0/${name}-project-${version}.src.tar.xz"
 
 build() {
-    printInfo "Extracting toolchain requirements"
-
     cd llvm-project-${version}/llvm
-
-    mkdir build && pushd build
     
     step_msg "Setting up enviroment variables..."
     export CFLAGS="-fPIC -O2 -pipe"
@@ -61,6 +57,7 @@ build() {
         -DCLANG_BUILD_TOOLS=OFF"
 
     step_msg "Configuring ${name} (1 of 2)"
+    mkdir -vp build && pushd build
     cmake -G Ninja ../ \
         ${llvmopts} \
         -DLLVM_BUILD_LLVM_DYLIB=ON \
