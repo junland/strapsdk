@@ -1,5 +1,5 @@
 #!/bin/bash
 
-msg() {
+step_msg() {
     printf " >>>> %s\n" "$1"
 }

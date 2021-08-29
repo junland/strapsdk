@@ -8,10 +8,10 @@ source lib/libstrap.sh
 export LANG="C"
 export LC_ALL="C"
 export STRAP_CWD=$(pwd)
-export STRAP_SOURCES=$STRAP_CWD/sources
 export STRAP_PATCHES=$STRAP_CWD/patches
+export STRAP_SOURCES=$STRAP_CWD/sources
 export STRAP_BUILD=$STRAP_CWD/build
-export STRAP_ROOTFS=$STRAP_CWD/rootfs
+export STRAP_INSTALL=$STRAP_CWD/install
 export STRAP_TARGET_ARCH=${STRAP_TARGET_ARCH:-x86_64}
 
 umask 022
@@ -46,7 +46,7 @@ case $STRAP_SEL_CMD in
 
     strap_msg "Creating needed directories..."
 
-    mkdir -vp "${STRAP_BUILD}" "${STRAP_ROOTFS}" "${STRAP_SOURCES}"
+    mkdir -vp "${STRAP_BUILD}" "${STRAP_INSTALL}" "${STRAP_SOURCES}"
 
     strap_msg "Starting execution of ${STRAP_SEL_CMD} with target of ${STRAP_TARGET_ARCH}"
 
@@ -59,13 +59,29 @@ case $STRAP_SEL_CMD in
 
       strap_msg "Running ${step} step..."
 
+
+      # Load the step file
       source "${STRAP_CWD}"/"${STRAP_STAGE}"/"${step}".step
 
+      # Download and extract the sources
       for url in $source{1..99};do
           strap_filedownload "$url" "$STRAP_SOURCES"/"$(basename "$url")" || exit 1
           strap_fileunpack "$STRAP_SOURCES"/"$(basename "$url")" "$STRAP_BUILD" || exit 1
       done
 
+      # Run build function
+      if test -n build; then
+        strap_msg "Running build function..."
+        build || exit 1
+      else
+        strap_msg_red "No build function found for ${step}."
+        exit 1
+      fi
+
+      # Cleanup build directory
+      rm -rf "${STRAP_BUILD}"/*
+
+      strap_msg "Finished ${step} step."
     done
 
     strap_msg "Execution of ${STRAP_SEL_CMD} with target of ${STRAP_TARGET_ARCH} finished."
@@ -74,7 +90,7 @@ case $STRAP_SEL_CMD in
     ;;
   "clean")
     strap_msg "Cleaning up..."
-    rm -rf "${STRAP_BUILD}" "${STRAP_ROOTFS}"
+    rm -rf "${STRAP_INSTALL}" "${STRAP_SOURCES}"
     exit 0
     ;;
   *)
