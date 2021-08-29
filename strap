@@ -5,6 +5,7 @@ set -e
 source lib/libstep.sh
 source lib/libstrap.sh
 
+export PATH="/usr/bin:/bin/:/sbin:/usr/sbin"
 export LANG="C"
 export LC_ALL="C"
 export STRAP_CWD=$(pwd)
@@ -13,6 +14,7 @@ export STRAP_SOURCES=$STRAP_CWD/sources
 export STRAP_BUILD=$STRAP_CWD/build
 export STRAP_INSTALL=$STRAP_CWD/install
 export STRAP_TARGET_ARCH=${STRAP_TARGET_ARCH:-x86_64}
+export STRAP_BUILD_JOBS=${STRAP_BUILD_JOBS:-$(nproc)}
 
 umask 022
 
@@ -72,11 +74,14 @@ case $STRAP_SEL_CMD in
       # Run build function
       if test -n build; then
         strap_msg "Running build function..."
-        build || exit 1
+        
+        cd ${STRAP_BUILD} && build || exit 1
       else
         strap_msg_red "No build function found for ${step}."
         exit 1
       fi
+
+      cd ${STRAP_CWD}
 
       # Cleanup build directory
       rm -rf "${STRAP_BUILD}"/*
@@ -90,7 +95,7 @@ case $STRAP_SEL_CMD in
     ;;
   "clean")
     strap_msg "Cleaning up..."
-    rm -rf "${STRAP_INSTALL}" "${STRAP_SOURCES}"
+    rm -rf "${STRAP_INSTALL}" "${STRAP_SOURCES}" "${STRAP_BUILD}"
     exit 0
     ;;
   *)
