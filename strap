@@ -1,0 +1,76 @@
+#/usr/bin/env -S -i bash --norc --noprofile
+
+set -e
+
+source lib/libstep.sh
+
+export LANG="C"
+export LC_ALL="C"
+export STRAP_CWD=$CWD
+export STRAP_SOURCES=$CWD/sources
+export STRAP_PATCHES=$CWD/patches
+export STRAP_BUILD=$CWD/build
+export STRAP_ROOTFS=$CWD/rootfs
+export STRAP_TARGET=${STRAP_TARGET:x86_64}
+
+CWD=$(pwd)
+umask 022
+
+if [ "$1" == "" ]; then
+  strap_msg_red "Please specify a stage to build."
+  exit 1
+fi
+
+export STRAP_SEL_CMD=$1
+
+case $STRAP_SEL_CMD in
+  "stage0" | "stage1" | "stage2")
+    if ! test -d "${CWD}"/"${STRAP_SEL_CMD}"; then
+      strap_msg_red "Can not execute $1, as the directory does not exist."
+      exit 1
+    fi
+
+    STRAP_STAGE=$STRAP_SEL_CMD
+
+    if test -z "${STRAP_TARGET}"; then
+      strap_msg_red "Please set STRAP_TARGET to build ${STRAP_STAGE}"
+      exit 1
+    fi
+
+    if ! test -f "${CWD}"/target/"${STRAP_TARGET}".tgt; then
+      strap_msg_red "$1 target file does not exist."
+      exit 1
+    fi
+
+    strap_msg "Starting execution of ${STRAP_SEL_CMD} with target of ${STRAP_TARGET}"
+    
+    sleep 3
+
+    for step in $(cat "${STRAP_CWD}"/"${STRAP_STAGE}"/"${STRAP_STAGE}".order); do 
+
+      if ! test -f "${STRAP_CWD}"/"${STRAP_STAGE}"/"${step}".sh; then
+        strap_msg_red "Step ${step} does not exist."
+        exit 1
+      fi
+
+      strap_msg "Running ${step} step..."
+
+      source "${STRAP_CWD}"/"${STRAP_STAGE}"/"${step}".sh
+
+      for url in $source{1..99};do
+          strap_filedownload "$url" "$STRAP_SOURCES"/"$(basename "$url")" 5 5
+      done
+
+    done
+    ;;
+  "clean")
+    strap_msg "Cleaning up..."
+    rm -rf "${STRAP_BUILD}" "${STRAP_ROOTFS}"
+    ;;
+  *)
+    strap_msg_red "Unknown command: $STRAP_SEL_CMD"
+    exit 1 
+    ;;
+esac
+
+exit 0
