@@ -1,7 +1,7 @@
 name=llvm-compiler-rt
 main_name=llvm
 version=12.0.1
-source1="https://github.com/${main_name}/${main_name}-project/releases/download/llvmorg-12.0.0/${main_name}-project-${version}.src.tar.xz"
+source1="https://github.com/${main_name}/${main_name}-project/releases/download/llvmorg-${version}/${main_name}-project-${version}.src.tar.xz"
 
 build() {
     if [[ "${STRAP_TARGET_ARCH}" == "${STRAP_ARCH}" ]]; then
