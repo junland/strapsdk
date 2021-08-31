@@ -25,7 +25,7 @@ strap_filedownload() {
 
     strap_msg "Downloading $url"
     
-    if curl --fail --ftp-pasv --retry 3 --retry-delay 3 -o $file "$url"; then
+    if curl -L --fail --ftp-pasv --retry 3 --retry-delay 3 -o $file "$url"; then
         strap_msg "Download complete for $url"
         return 0
     else
