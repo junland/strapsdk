@@ -51,7 +51,7 @@ strap_fileunpack() {
 	esac
 
     [ $? = 0 ] || {
-		msgerr "Unpacking/Copying failed: $file"
-		abort 1
-	}
+	strap_msg_red "Unpacking/Copying failed: $file"
+	exit 1
+    }
 }
