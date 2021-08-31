@@ -1,6 +1,6 @@
 name=llvm
 version=12.0.1
-source1="https://github.com/${main_name}/${main_name}-project/releases/download/llvmorg-${version}/${main_name}-project-${version}.src.tar.xz"
+source1="https://github.com/${name}/${name}-project/releases/download/llvmorg-${version}/${name}-project-${version}.src.tar.xz"
 
 build() {
     cd llvm-project-${version}/llvm
