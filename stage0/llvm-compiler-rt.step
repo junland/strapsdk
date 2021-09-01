@@ -9,7 +9,7 @@ build() {
         exit 0
     fi
 
-    cd llvm-project-${$version}/compiler-rt
+    cd llvm-project-${$version}.src/compiler-rt
 
     step_msg "Setting variables..."
     export PATH="${STRAP_INSTALL}/usr/bin:$PATH"
