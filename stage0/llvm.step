@@ -83,7 +83,7 @@ build() {
     ninja -j "${SERPENT_BUILD_JOBS}" -v lld clang
 
     step_msg "Installing ${name} (2 of 2)"
-    cp -v "${STRAP_BUILD}"/llvm-project-${version}/llvm/build/bin/* "${STRAP_INSTALL}/usr/bin/"
+    cp -vr "${STRAP_BUILD}"/llvm-project-${version}.src/llvm/build/bin/* "${STRAP_INSTALL}/usr/bin/"
 
     # Only install if binutils ld not already present
     if [ ! -f "${STRAP_INSTALL}/usr/bin/ld" ]; then
