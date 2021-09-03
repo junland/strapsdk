@@ -57,7 +57,7 @@ build() {
         -DCLANG_BUILD_TOOLS=OFF"
 
     step_msg "Configuring ${name} (1 of 2)"
-    mkdir -vp build && pushd build
+    mkdir -vp build && cd build
     cmake -G Ninja ../ \
         ${llvmopts} \
         -DLLVM_BUILD_LLVM_DYLIB=ON \
