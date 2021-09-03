@@ -45,6 +45,10 @@ case $STRAP_SEL_CMD in
     fi
 
     strap_msg "Found target file: ${STRAP_CWD}/target/${STRAP_TARGET_ARCH}.tgt"
+    
+    strap_msg "Selecting target file..."
+    
+    source ${STRAP_CWD}/target/${STRAP_TARGET_ARCH}.tgt
 
     strap_msg "Creating needed directories..."
 
