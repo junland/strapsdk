@@ -61,9 +61,10 @@ case $STRAP_SEL_CMD in
 
       strap_msg "Running ${step} step..."
 
-
       # Load the step file
       source "${STRAP_CWD}"/"${STRAP_STAGE}"/"${step}".step
+      
+      set -e
 
       # Download and extract the sources
       for url in $source{1..99};do
@@ -74,6 +75,8 @@ case $STRAP_SEL_CMD in
       # Run build function
       if test -n build; then
         strap_msg "Running build function..."
+        
+        set -e
         
         cd ${STRAP_BUILD} && build || exit 1
       else
