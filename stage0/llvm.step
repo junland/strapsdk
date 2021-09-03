@@ -5,9 +5,22 @@ source1="https://github.com/${name}/${name}-project/releases/download/llvmorg-${
 build() {
     cd llvm-project-${version}.src/llvm
     
-    step_msg "Setting up enviroment variables..."
-    export CFLAGS="-fPIC -O2 -pipe"
-    export CXXFLAGS="${CFLAGS}"
+    mkdir -vp build && cd build
+    
+    case ${STRAP_TARGET_LLVM_BACKEND} in
+      X86)
+        export CFLAGS="-fPIC -O2 -pipe"
+        export CXXFLAGS="${CFLAGS}"
+        ;;
+      AArch64)
+        export CFLAGS="-fPIC -O2 -pipe -mno-outline-atomics"
+        export CXXFLAGS="${CFLAGS}"
+        ;;
+      *)
+        step_msg "No LLVM target found for ${STRAP_TARGET_LLVM_BACKEND}"
+        exit 1
+        ;;
+    esac
     
     step_msg "Setting up configure options..."
     export llvmopts="
