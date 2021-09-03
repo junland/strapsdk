@@ -23,7 +23,7 @@ build() {
     esac
     
     step_msg "Setting up configure options..."
-    export llvmopts="
+    export main_llvm_opts="
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DLLVM_ENABLE_PROJECTS='clang;compiler-rt;libcxx;libcxxabi;libunwind;lld;llvm' \
         -DDEFAULT_SYSROOT="${STRAP_INSTALL}" \
@@ -68,12 +68,14 @@ build() {
         -DLLVM_OPTIMIZED_TABLEGEN=ON \
         -DLLVM_BUILD_TOOLS=OFF \
         -DCLANG_BUILD_TOOLS=OFF"
+    
+    cfg1_llvm_opts="-DLLVM_LINK_LLVM_DYLIB=ON -DLLVM_BUILD_LLVM_DYLIB=ON"
+    
+    cfg2_llvm_opts="-DLLVM_BUILD_LLVM_DYLIB=OFF -DLLVM_LINK_LLVM_DYLIB=OFF -DCLANG_LINK_CLANG_DYLIB=OFF"
 
     step_msg "Configuring ${name} (1 of 2)"
     mkdir -vp build && cd build
-    cmake -G Ninja ../ ${llvmopts} \
-        -DLLVM_BUILD_LLVM_DYLIB=ON \
-        -DLLVM_LINK_LLVM_DYLIB=ON
+    cmake -G Ninja ../ "${llvmopts}" "${cfg1_llvm_opts}"
         
     ls -la
     
@@ -87,11 +89,7 @@ build() {
     DESTDIR="${STRAP_INSTALL}" ninja install -j "${STRAP_BUILD_JOBS}" -v
 
     step_msg "Configuring ${name} (2 of 2)"
-    cmake -G Ninja ../ \
-        ${llvmopts} \
-        -DLLVM_BUILD_LLVM_DYLIB=OFF \
-        -DLLVM_LINK_LLVM_DYLIB=OFF \
-        -DCLANG_LINK_CLANG_DYLIB=OFF
+    cmake -G Ninja ../ "${llvmopts}" "${cfg2_llvm_opts}"
 
     step_msg "Building ${name} (3 of 3)"
     ninja -j "${SERPENT_BUILD_JOBS}" -v lld clang
