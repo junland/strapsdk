@@ -4,9 +4,11 @@ version=12.0.1
 source1="https://github.com/${main_name}/${main_name}-project/releases/download/llvmorg-${version}/${main_name}-project-${version}.src.tar.xz"
 
 build() {
+  set -e
+
   if [[ "${STRAP_TARGET_ARCH}" == "${STRAP_ARCH}" ]]; then
     step_msg "Skipping compiler-rt on native architecture"
-    exit 0
+    return 0
   fi
 
   cd llvm-project-${version}.src/compiler-rt || exit

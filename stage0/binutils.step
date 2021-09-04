@@ -3,6 +3,8 @@ version=2.37
 source1="https://ftp.gnu.org/gnu/binutils/${name}-${version}.tar.bz2"
 
 build() {
+  set -e
+
   cd binutils-*
 
   step_msg "Setting up enviroment variables..."

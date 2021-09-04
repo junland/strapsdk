@@ -3,6 +3,8 @@ version=12.0.1
 source1="https://github.com/${name}/${name}-project/releases/download/llvmorg-${version}/${name}-project-${version}.src.tar.xz"
 
 build() {
+  set -e
+
   cd llvm-project-${version}.src/llvm
 
   mkdir -vp build && cd build
@@ -75,7 +77,7 @@ build() {
 
   step_msg "Configuring ${name} (1 of 2)"
   mkdir -vp build && cd build
-  cmake -G Ninja ../ "${main_llvm_opts}" "${cfg1_llvm_opts}"
+  cmake -G Ninja ../ ${main_llvm_opts} ${cfg1_llvm_opts}
 
   ls -la
 
@@ -89,7 +91,7 @@ build() {
   DESTDIR="${STRAP_INSTALL}" ninja install -j "${STRAP_BUILD_JOBS}" -v
 
   step_msg "Configuring ${name} (2 of 2)"
-  cmake -G Ninja ../ "${main_llvm_opts}" "${cfg2_llvm_opts}"
+  cmake -G Ninja ../ ${main_llvm_opts} ${cfg2_llvm_opts}
 
   step_msg "Building ${name} (3 of 3)"
   ninja -j "${SERPENT_BUILD_JOBS}" -v lld clang
