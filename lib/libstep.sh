@@ -1,5 +1,5 @@
 #!/bin/bash
 
 step_msg() {
-    printf " >>>> %s\n" "$1"
+  printf " >>>> %s\n" "$1"
 }

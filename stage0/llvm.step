@@ -3,35 +3,35 @@ version=12.0.1
 source1="https://github.com/${name}/${name}-project/releases/download/llvmorg-${version}/${name}-project-${version}.src.tar.xz"
 
 build() {
-    cd llvm-project-${version}.src/llvm
-    
-    mkdir -vp build && cd build
-    
-    case ${STRAP_TARGET_LLVM_BACKEND} in
-      X86)
-        export CFLAGS="-fPIC -O2 -pipe"
-        export CXXFLAGS="${CFLAGS}"
-        ;;
-      AArch64)
-        export CFLAGS="-fPIC -O2 -pipe -mno-outline-atomics"
-        export CXXFLAGS="${CFLAGS}"
-        ;;
-      *)
-        step_msg "No LLVM target found for ${STRAP_TARGET_LLVM_BACKEND}"
-        exit 1
-        ;;
-    esac
-    
-    step_msg "Setting up configure options..."
-    export main_llvm_opts="
+  cd llvm-project-${version}.src/llvm
+
+  mkdir -vp build && cd build
+
+  case ${STRAP_TARGET_LLVM_BACKEND} in
+    X86)
+      export CFLAGS="-fPIC -O2 -pipe"
+      export CXXFLAGS="${CFLAGS}"
+      ;;
+    AArch64)
+      export CFLAGS="-fPIC -O2 -pipe -mno-outline-atomics"
+      export CXXFLAGS="${CFLAGS}"
+      ;;
+    *)
+      step_msg "No LLVM target found for ${STRAP_TARGET_LLVM_BACKEND}"
+      exit 1
+      ;;
+  esac
+
+  step_msg "Setting up configure options..."
+  export main_llvm_opts="
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DLLVM_ENABLE_PROJECTS='clang;compiler-rt;libcxx;libcxxabi;libunwind;lld;llvm' \
-        -DDEFAULT_SYSROOT="${STRAP_INSTALL}" \
+        -DDEFAULT_SYSROOT=${STRAP_INSTALL} \
         -DCMAKE_BUILD_TYPE=Release \
         -DLLVM_ENABLE_LIBXML2=OFF \
-        -DLLVM_TARGET_ARCH="${STRAP_TARGET_ARCH}" \
-        -DLLVM_DEFAULT_TARGET_TRIPLE="${STRAP_TRIPLET_FULL}" \
-        -DLLVM_TARGETS_TO_BUILD="${STRAP_TARGET_LLVM_BACKEND}" \
+        -DLLVM_TARGET_ARCH=${STRAP_TARGET_ARCH} \
+        -DLLVM_DEFAULT_TARGET_TRIPLE=${STRAP_TRIPLET_FULL} \
+        -DLLVM_TARGETS_TO_BUILD=${STRAP_TARGET_LLVM_BACKEND} \
         -DLLVM_INCLUDE_TESTS=OFF \
         -DCLANG_DEFAULT_CXX_STDLIB=libc++ \
         -DCLANG_DEFAULT_LINKER=lld \
@@ -68,40 +68,40 @@ build() {
         -DLLVM_OPTIMIZED_TABLEGEN=ON \
         -DLLVM_BUILD_TOOLS=OFF \
         -DCLANG_BUILD_TOOLS=OFF"
-    
-    cfg1_llvm_opts="-DLLVM_LINK_LLVM_DYLIB=ON -DLLVM_BUILD_LLVM_DYLIB=ON"
-    
-    cfg2_llvm_opts="-DLLVM_BUILD_LLVM_DYLIB=OFF -DLLVM_LINK_LLVM_DYLIB=OFF -DCLANG_LINK_CLANG_DYLIB=OFF"
 
-    step_msg "Configuring ${name} (1 of 2)"
-    mkdir -vp build && cd build
-    cmake -G Ninja ../ "${llvmopts}" "${cfg1_llvm_opts}"
-        
-    ls -la
-    
-    step_msg "Building ${name} (1 of 3)"
-    ninja -j "${SERPENT_BUILD_JOBS}" -v
+  cfg1_llvm_opts="-DLLVM_LINK_LLVM_DYLIB=ON -DLLVM_BUILD_LLVM_DYLIB=ON"
 
-    step_msg "Building ${name} (2 of 3)"
-    ninja -j "${SERPENT_BUILD_JOBS}" -v llvm-config
+  cfg2_llvm_opts="-DLLVM_BUILD_LLVM_DYLIB=OFF -DLLVM_LINK_LLVM_DYLIB=OFF -DCLANG_LINK_CLANG_DYLIB=OFF"
 
-    step_msg "Installing ${name} (1 of 2)"
-    DESTDIR="${STRAP_INSTALL}" ninja install -j "${STRAP_BUILD_JOBS}" -v
+  step_msg "Configuring ${name} (1 of 2)"
+  mkdir -vp build && cd build
+  cmake -G Ninja ../ "${main_llvm_opts}" "${cfg1_llvm_opts}"
 
-    step_msg "Configuring ${name} (2 of 2)"
-    cmake -G Ninja ../ "${llvmopts}" "${cfg2_llvm_opts}"
+  ls -la
 
-    step_msg "Building ${name} (3 of 3)"
-    ninja -j "${SERPENT_BUILD_JOBS}" -v lld clang
+  step_msg "Building ${name} (1 of 3)"
+  ninja -j "${SERPENT_BUILD_JOBS}" -v
 
-    step_msg "Installing ${name} (2 of 2)"
-    cp -vr "${STRAP_BUILD}"/llvm-project-${version}.src/llvm/build/bin/* "${STRAP_INSTALL}/usr/bin/"
+  step_msg "Building ${name} (2 of 3)"
+  ninja -j "${SERPENT_BUILD_JOBS}" -v llvm-config
 
-    # Only install if binutils ld not already present
-    if [ ! -f "${STRAP_INSTALL}/usr/bin/ld" ]; then
-        step_msg "Setting ld.lld as default ld"
-        ln -svf ld.lld "${STRAP_INSTALL}/usr/bin/ld"
-    else
-        step_msg "ld.lld already present, skipping"
-    fi
+  step_msg "Installing ${name} (1 of 2)"
+  DESTDIR="${STRAP_INSTALL}" ninja install -j "${STRAP_BUILD_JOBS}" -v
+
+  step_msg "Configuring ${name} (2 of 2)"
+  cmake -G Ninja ../ "${main_llvm_opts}" "${cfg2_llvm_opts}"
+
+  step_msg "Building ${name} (3 of 3)"
+  ninja -j "${SERPENT_BUILD_JOBS}" -v lld clang
+
+  step_msg "Installing ${name} (2 of 2)"
+  cp -vr "${STRAP_BUILD}"/llvm-project-${version}.src/llvm/build/bin/* "${STRAP_INSTALL}/usr/bin/"
+
+  # Only install if binutils ld not already present
+  if [ ! -f "${STRAP_INSTALL}/usr/bin/ld" ]; then
+    step_msg "Setting ld.lld as default ld"
+    ln -svf ld.lld "${STRAP_INSTALL}/usr/bin/ld"
+  else
+    step_msg "ld.lld already present, skipping"
+  fi
 }
