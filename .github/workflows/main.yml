@@ -5,10 +5,11 @@ on:
   pull_request:
     branches: [ master ]
 
-jobs:  
+jobs:
   build:
     name: Build toolchain and rootfs
     runs-on: ubuntu-20.04
+    timeout-minutes: 160
     strategy:
       fail-fast: false
       matrix:
@@ -30,4 +31,3 @@ jobs:
     ### Actually run bootstrap process ###
     - name: Build stage0
       run: STRAP_TARGET_ARCH=$ACTION_TGT_ARCH ./strap stage0
-      timeout-minutes: 360
