@@ -9,7 +9,6 @@ jobs:
   build:
     name: Build toolchain and rootfs
     runs-on: ubuntu-20.04
-    timeout-minutes: 160
     strategy:
       fail-fast: false
       matrix:
@@ -20,6 +19,7 @@ jobs:
     steps:
     ### Setup OS enviroment ###
     - uses: actions/checkout@v2
+      timeout-minutes: 160
     - name: install / update deps if not installed
       run: sudo apt update -y && sudo apt install cmake ninja-build sshpass rsync build-essential expect pkg-config libarchive-tools m4 gawk bc bison flex texinfo python3 perl libtool autoconf automake autopoint autoconf-archive mtools liblzma-dev libelf-dev libssl-dev zlib1g-dev zlib1g xz-utils lzip file curl wget gettext -y && sudo apt autoremove -y
     - name: use bash instead of dash
