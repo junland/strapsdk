@@ -24,8 +24,6 @@ jobs:
       run: sudo apt update -y && sudo apt install cmake ninja-build sshpass rsync build-essential expect pkg-config libarchive-tools m4 gawk bc bison flex texinfo python3 perl libtool autoconf automake autopoint autoconf-archive mtools liblzma-dev libelf-dev libssl-dev zlib1g-dev zlib1g xz-utils lzip file curl wget gettext -y && sudo apt autoremove -y
     - name: use bash instead of dash
       run: sudo dpkg-reconfigure dash
-    - name: move bashrc file outside of current user
-      run: sudo mv -fv /etc/bash.bashrc /etc/bash.bashrc.NOUSE | true
     - name: setup strap command
       run: chmod +x ./strap
     ### Actually run bootstrap process ###
