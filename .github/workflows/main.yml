@@ -30,3 +30,4 @@ jobs:
     ### Actually run bootstrap process ###
     - name: Build stage0
       run: STRAP_TARGET_ARCH=$ACTION_TGT_ARCH ./strap stage0
+      timeout-minutes: 360
