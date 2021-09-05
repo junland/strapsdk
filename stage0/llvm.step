@@ -27,19 +27,19 @@ build() {
   step_msg "Configuring ${name} (1 of 2)"
   cmake -G Ninja ../ -DCMAKE_INSTALL_PREFIX=/usr \
         -DLLVM_ENABLE_PROJECTS='clang;compiler-rt;libcxx;libcxxabi;libunwind;lld;llvm' \
-        -DDEFAULT_SYSROOT=${STRAP_INSTALL} \
+        -DDEFAULT_SYSROOT="${STRAP_INSTALL}" \
         -DCMAKE_BUILD_TYPE=Release \
         -DLLVM_ENABLE_LIBXML2=OFF \
-        -DLLVM_TARGET_ARCH=${STRAP_TARGET_ARCH} \
-        -DLLVM_DEFAULT_TARGET_TRIPLE=${STRAP_TRIPLET_FULL} \
-        -DLLVM_TARGETS_TO_BUILD=${STRAP_TARGET_LLVM_BACKEND} \
+        -DLLVM_TARGET_ARCH="${STRAP_TARGET_ARCH}" \
+        -DLLVM_DEFAULT_TARGET_TRIPLE="${STRAP_TRIPLET_FULL}" \
+        -DLLVM_TARGETS_TO_BUILD="${STRAP_TARGET_LLVM_BACKEND}" \
         -DLLVM_INCLUDE_TESTS=OFF \
         -DCLANG_DEFAULT_CXX_STDLIB=libc++ \
         -DCLANG_DEFAULT_LINKER=lld \
         -DCLANG_DEFAULT_OBJCOPY=llvm-objcopy \
         -DCLANG_DEFAULT_RTLIB=compiler-rt \
         -DLLVM_INSTALL_BINUTILS_SYMLINKS=ON \
-        -DLLVM_INSTALL_CCTOOLS_SYMLINKS=ON
+        -DLLVM_INSTALL_CCTOOLS_SYMLINKS=ON \
         -DCOMPILER_RT_USE_BUILTINS_LIBRARY=OFF \
         -DCOMPILER_RT_USE_LIBCXX=ON \
         -DLLVM_ENABLE_LIBCXX=ON \
@@ -97,19 +97,19 @@ build_pass2() {
   cmake -G Ninja ../ \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DLLVM_ENABLE_PROJECTS='clang;compiler-rt;libcxx;libcxxabi;libunwind;lld;llvm' \
-        -DDEFAULT_SYSROOT=${STRAP_INSTALL} \
+        -DDEFAULT_SYSROOT="${STRAP_INSTALL}" \
         -DCMAKE_BUILD_TYPE=Release \
         -DLLVM_ENABLE_LIBXML2=OFF \
-        -DLLVM_TARGET_ARCH=${STRAP_TARGET_ARCH} \
-        -DLLVM_DEFAULT_TARGET_TRIPLE=${STRAP_TRIPLET_FULL} \
-        -DLLVM_TARGETS_TO_BUILD=${STRAP_TARGET_LLVM_BACKEND} \
+        -DLLVM_TARGET_ARCH="${STRAP_TARGET_ARCH}" \
+        -DLLVM_DEFAULT_TARGET_TRIPLE="${STRAP_TRIPLET_FULL}" \
+        -DLLVM_TARGETS_TO_BUILD="${STRAP_TARGET_LLVM_BACKEND}" \
         -DLLVM_INCLUDE_TESTS=OFF \
         -DCLANG_DEFAULT_CXX_STDLIB=libc++ \
         -DCLANG_DEFAULT_LINKER=lld \
         -DCLANG_DEFAULT_OBJCOPY=llvm-objcopy \
         -DCLANG_DEFAULT_RTLIB=compiler-rt \
         -DLLVM_INSTALL_BINUTILS_SYMLINKS=ON \
-        -DLLVM_INSTALL_CCTOOLS_SYMLINKS=ON
+        -DLLVM_INSTALL_CCTOOLS_SYMLINKS=ON \
         -DCOMPILER_RT_USE_BUILTINS_LIBRARY=OFF \
         -DCOMPILER_RT_USE_LIBCXX=ON \
         -DLLVM_ENABLE_LIBCXX=ON \
@@ -147,5 +147,3 @@ build_pass2() {
   step_msg "Installing ${name} (2 of 2)"
   cp -vr "${STRAP_BUILD}"/llvm-project-${version}.src/llvm/build/bin/* "${STRAP_INSTALL}/usr/bin/"
 }
-
-
