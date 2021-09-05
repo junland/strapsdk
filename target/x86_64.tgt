@@ -9,7 +9,7 @@ export STRAP_TARGET_LDFLAGS=""
 
 # Toolchain variables
 export STRAP_TARGET_VENDOR=bootstrap
-export STRAP_TRIPLET_FULL="x86_64-${STRAP_TRIPLET_VENDOR}-linux"
+export STRAP_TRIPLET_FULL="x86_64-${STRAP_TARGET_VENDOR}-linux"
 
 # Kernel variables
 export STRAP_TARGET_KARCH="x86_64"
