@@ -1,6 +1,6 @@
 name=binutils
 version=2.37
-source1="https://ftp.gnu.org/gnu/binutils/${name}-${version}.tar.bz2"
+source1="https://ftp.gnu.org/gnu/binutils/binutils-${version}.tar.bz2"
 
 build() {
   set -e
@@ -15,9 +15,9 @@ build() {
   export CFLAGS="-O2"
   export CXXFLAGS="-O2"
 
-  step_msg "Configuring ${name}"
+  step_msg "Configuring binutils"
 
-  mkdir build && pushd build
+  mkdir build && cd build
   ../configure --prefix=/usr/binutils \
     --target="${STRAP_TRIPLET_FULL}" \
     --with-sysroot="${STRAP_INSTALL}" \
@@ -38,5 +38,4 @@ build() {
 
   step_msg "Installing ${name}"
   make -j "${STRAP_BUILD_JOBS}" tooldir=/usr/binutils install DESTDIR="${STRAP_INSTALL}"
-
 }

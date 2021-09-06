@@ -1,6 +1,6 @@
 name=llvm
 version=12.0.1
-source1="https://github.com/${name}/${name}-project/releases/download/llvmorg-${version}/${name}-project-${version}.src.tar.xz"
+source1="https://github.com/llvm/llvm-project/releases/download/llvmorg-${version}/llvm-project-${version}.src.tar.xz"
 
 build() {
   set -e
@@ -24,7 +24,7 @@ build() {
       ;;
   esac
  
-  step_msg "Configuring ${name} (1 of 2)"
+  step_msg "Configuring llvm (1 of 2)"
   cmake -G Ninja ../ -DCMAKE_INSTALL_PREFIX=/usr \
         -DLLVM_ENABLE_PROJECTS='clang;compiler-rt;libcxx;libcxxabi;libunwind;lld;llvm' \
         -DDEFAULT_SYSROOT="${STRAP_INSTALL}" \
@@ -71,16 +71,16 @@ build() {
         -DCLANG_BUILD_TOOLS=OFF \
         -DLLVM_LINK_LLVM_DYLIB=ON -DLLVM_BUILD_LLVM_DYLIB=ON
 
-  step_msg "Building ${name} (1 of 3)"
+  step_msg "Building llvm (1 of 3)"
   ninja -j "${SERPENT_BUILD_JOBS}" -v
 
-  step_msg "Building ${name} (2 of 3)"
+  step_msg "Building llvm (2 of 3)"
   ninja -j "${SERPENT_BUILD_JOBS}" -v llvm-config
 
-  step_msg "Installing ${name} (1 of 2)"
+  step_msg "Installing llvm (1 of 2)"
   DESTDIR="${STRAP_INSTALL}" ninja install -j "${STRAP_BUILD_JOBS}" -v
   
-  step_msg "Running build phase 2 for ${name}..."
+  step_msg "Running build phase 2 for llvm..."
   build_pass2
 
   # Only install if binutils ld not already present
@@ -93,7 +93,7 @@ build() {
 }
 
 build_pass2() {
-  step_msg "Configuring ${name} (2 of 2)"
+  step_msg "Configuring llvm (2 of 2)"
   cmake -G Ninja ../ \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DLLVM_ENABLE_PROJECTS='clang;compiler-rt;libcxx;libcxxabi;libunwind;lld;llvm' \
@@ -141,9 +141,9 @@ build_pass2() {
         -DCLANG_BUILD_TOOLS=OFF \
         -DLLVM_BUILD_LLVM_DYLIB=OFF -DLLVM_LINK_LLVM_DYLIB=OFF -DCLANG_LINK_CLANG_DYLIB=OFF
 
-  step_msg "Building ${name} (3 of 3)"
+  step_msg "Building llvm (3 of 3)"
   ninja -j "${SERPENT_BUILD_JOBS}" -v lld clang
 
-  step_msg "Installing ${name} (2 of 2)"
+  step_msg "Installing llvm (2 of 2)"
   cp -vr "${STRAP_BUILD}"/llvm-project-${version}.src/llvm/build/bin/* "${STRAP_INSTALL}/usr/bin/"
 }
