@@ -5,9 +5,9 @@ mpc_version=1.2.1
 gmp_version=6.2.1
 isl_version=0.24
 source1="https://ftp.gnu.org/gnu/gcc/gcc-${version}/gcc-${version}.tar.xz"
-source2="https://ftp.gnu.org/gnu/mpfr/mpfr-${mpfr_version}/mpfr-${mpfr_version}.tar.xz"
-source3="https://ftp.gnu.org/gnu/mpc/mpc-${mpc_version}/mpc-${mpc_version}.tar.xz"
-source4="https://ftp.gnu.org/gnu/gmp/gmp-${gmp_version}/gmp-${gmp_version}.tar.xz"
+source2="https://ftp.gnu.org/gnu/mpfr/mpfr-${mpfr_version}.tar.xz"
+source3="https://ftp.gnu.org/gnu/mpc/mpc-${mpc_version}.tar.xz"
+source4="https://ftp.gnu.org/gnu/gmp/gmp-${gmp_version}.tar.xz"
 source5="http://isl.gforge.inria.fr/isl-${isl_version}.tar.xz"
 
 build() {
