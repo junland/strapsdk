@@ -1,5 +1,8 @@
 #!/bin/true
 
+# Host variables
+export STRAP_HOST_ARCH=$(uname -m)
+
 # Compiler variables
 export STRAP_TARGET_ARCH="x86_64"
 export STRAP_TARGET_LLVM_BACKEND="X86"
