@@ -6,7 +6,7 @@ source1="https://github.com/${main_name}/${main_name}-project/releases/download/
 build() {
   set -e
 
-  if [[ "${STRAP_TARGET_ARCH}" == "${STRAP_ARCH}" ]]; then
+  if [[ "${STRAP_TARGET_ARCH}" == "${STRAP_HOST_ARCH}" ]]; then
     step_msg "Skipping compiler-rt on native architecture"
     return 0
   fi
