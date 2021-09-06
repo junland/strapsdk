@@ -100,13 +100,14 @@ case $STRAP_SEL_CMD in
 
     exit 0
     ;;
-  "clean")
+  "clean" | "cleanup")
     strap_msg "Cleaning up..."
     rm -rf "${STRAP_INSTALL}" "${STRAP_SOURCES}" "${STRAP_BUILD}"
     exit 0
     ;;
   *)
     strap_msg_red "Unknown command: $STRAP_SEL_CMD"
+    strap_msg_red "Available commands: stage0, stage1, stage2, clean | cleanup"
     exit 1
     ;;
 esac
