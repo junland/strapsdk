@@ -1,4 +1,4 @@
-#/usr/bin/env -S -i bash --norc --noprofile
+#!/bin/bash
 
 set -e
 
