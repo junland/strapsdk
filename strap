@@ -6,8 +6,8 @@ source lib/libstep.sh
 source lib/libstrap.sh
 
 export PATH="/usr/bin:/bin/:/sbin:/usr/sbin"
-export LANG="C"
-export LC_ALL="C"
+export LANG="POSIX"
+export LC_ALL="POSIX"
 export STRAP_CWD=$(pwd)
 export STRAP_PATCHES=$STRAP_CWD/patches
 export STRAP_SOURCES=$STRAP_CWD/sources
