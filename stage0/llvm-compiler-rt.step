@@ -25,7 +25,7 @@ build() {
 
   step_msg "Configuring llvm compiler-rt builtins"
   mkdir -vp build && cd build || exit
-  cmake .. -G Ninja \
+  cmake ../ -G Ninja \
     -DCOMPILER_RT_BUILD_BUILTINS=ON \
     -DCOMPILER_RT_BUILD_SANITIZERS=OFF \
     -DCOMPILER_RT_BUILD_XRAY=OFF \

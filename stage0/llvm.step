@@ -25,7 +25,8 @@ build() {
   esac
  
   step_msg "Configuring llvm (1 of 2)"
-  cmake -G Ninja ../ -DCMAKE_INSTALL_PREFIX=/usr \
+  cmake ../ -G Ninja -j "${STRAP_BUILD_JOBS}" \
+        -DCMAKE_INSTALL_PREFIX=/usr \
         -DLLVM_ENABLE_PROJECTS='clang;compiler-rt;libcxx;libcxxabi;libunwind;lld;llvm' \
         -DDEFAULT_SYSROOT="${STRAP_INSTALL}" \
         -DCMAKE_BUILD_TYPE=Release \
@@ -94,7 +95,7 @@ build() {
 
 build_pass2() {
   step_msg "Configuring llvm (2 of 2)"
-  cmake -G Ninja ../ \
+  cmake ../ -G Ninja \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DLLVM_ENABLE_PROJECTS='clang;compiler-rt;libcxx;libcxxabi;libunwind;lld;llvm' \
         -DDEFAULT_SYSROOT="${STRAP_INSTALL}" \

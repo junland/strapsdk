@@ -28,4 +28,4 @@ jobs:
       run: chmod +x ./strap
     ### Actually run bootstrap process ###
     - name: Build stage0
-      run: STRAP_TARGET_ARCH=$ACTION_TGT_ARCH ./strap stage0
+      run: STRAP_BUILD_JOBS=2 STRAP_TARGET_ARCH=$ACTION_TGT_ARCH ./strap stage0

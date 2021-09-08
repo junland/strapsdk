@@ -15,7 +15,7 @@ export STRAP_BUILD=$STRAP_CWD/build
 export STRAP_INSTALL=$STRAP_CWD/install
 export STRAP_TARGET_ARCH=${STRAP_TARGET_ARCH:-x86_64}
 export STRAP_BUILD_JOBS=${STRAP_BUILD_JOBS:-$(nproc)}
-
+#export STRAP_BUILD_JOBS=2
 umask 022
 
 if [ "$1" == "" ]; then
@@ -27,6 +27,7 @@ export STRAP_SEL_CMD=$1
 
 case $STRAP_SEL_CMD in
   "stage0" | "stage1" | "stage2")
+    
     if ! test -d "${STRAP_CWD}"/"${STRAP_SEL_CMD}"; then
       strap_msg_red "Can not execute $1, as the directory does not exist."
       exit 1
@@ -55,6 +56,8 @@ case $STRAP_SEL_CMD in
     mkdir -vp "${STRAP_BUILD}" "${STRAP_INSTALL}" "${STRAP_SOURCES}"
 
     strap_msg "Starting execution of ${STRAP_SEL_CMD} with target of ${STRAP_TARGET_ARCH}"
+
+    strap_msg "Build Threads: ${STRAP_BUILD_JOBS}"
 
     for step in $(cat "${STRAP_CWD}"/"${STRAP_STAGE}"/"${STRAP_STAGE}".order); do
 
