@@ -15,7 +15,7 @@ export STRAP_BUILD=$STRAP_CWD/build
 export STRAP_INSTALL=$STRAP_CWD/install
 export STRAP_TARGET_ARCH=${STRAP_TARGET_ARCH:-x86_64}
 export STRAP_BUILD_JOBS=${STRAP_BUILD_JOBS:-$(nproc)}
-#export STRAP_BUILD_JOBS=2
+
 umask 022
 
 if [ "$1" == "" ]; then
@@ -60,6 +60,7 @@ case $STRAP_SEL_CMD in
     strap_msg "Build Threads: ${STRAP_BUILD_JOBS}"
 
     for step in $(cat "${STRAP_CWD}"/"${STRAP_STAGE}"/"${STRAP_STAGE}".order); do
+      set -e
 
       if ! test -f "${STRAP_CWD}"/"${STRAP_STAGE}"/"${step}".step; then
         strap_msg_red "Step ${step} does not exist."
@@ -71,8 +72,6 @@ case $STRAP_SEL_CMD in
       # Load the step file
       source "${STRAP_CWD}"/"${STRAP_STAGE}"/"${step}".step
 
-      set -e
-
       # Download and extract the sources
       for url in $source{1..99}; do
         strap_filedownload "$url" "$STRAP_SOURCES"/"$(basename "$url")" || exit 1
@@ -82,8 +81,6 @@ case $STRAP_SEL_CMD in
       # Run build function
       if test -n build; then
         strap_msg "Running build function..."
-
-        set -e
 
         cd ${STRAP_BUILD} && build || exit 1
       else
