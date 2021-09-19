@@ -1,13 +1,23 @@
 #!/bin/bash
 
+trap 'catch_err $? $LINENO' ERR
+
+catch_err() {
+  echo "[STRAP FATEL ERROR] Caught error on line $1"
+  exit 1
+}
+
 set -e
 
 source lib/libstep.sh
 source lib/libstrap.sh
 
 export PATH="/usr/bin:/bin/:/sbin:/usr/sbin"
-export LANG="POSIX"
-export LC_ALL="POSIX"
+export LANG="C"
+export LC_ALL="C"
+export STRAP_PATH=$PATH
+export STRAP_LANG=$LANG
+export STRAP_LC_ALL=$LC_ALL
 export STRAP_CWD=$(pwd)
 export STRAP_PATCHES=$STRAP_CWD/patches
 export STRAP_SOURCES=$STRAP_CWD/sources
@@ -27,7 +37,7 @@ export STRAP_SEL_CMD=$1
 
 case $STRAP_SEL_CMD in
   "stage0" | "stage1" | "stage2")
-    
+
     if ! test -d "${STRAP_CWD}"/"${STRAP_SEL_CMD}"; then
       strap_msg_red "Can not execute $1, as the directory does not exist."
       exit 1
@@ -91,6 +101,8 @@ case $STRAP_SEL_CMD in
       cd ${STRAP_CWD}
 
       # Cleanup build directory
+      strap_msg "Cleaning build directory..."
+
       rm -rf "${STRAP_BUILD}"/*
 
       strap_msg "Finished ${step} step."
@@ -100,9 +112,14 @@ case $STRAP_SEL_CMD in
 
     exit 0
     ;;
+  "distclean" | "distcleanup")
+    strap_msg "Cleaning up (dist)..."
+    rm -rf "${STRAP_INSTALL}" "${STRAP_SOURCES}" "${STRAP_BUILD}"
+    exit 0
+    ;;
   "clean" | "cleanup")
     strap_msg "Cleaning up..."
-    rm -rf "${STRAP_INSTALL}" "${STRAP_SOURCES}" "${STRAP_BUILD}"
+    rm -rf "${STRAP_INSTALL}" "${STRAP_BUILD}"
     exit 0
     ;;
   *)

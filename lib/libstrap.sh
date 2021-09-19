@@ -39,14 +39,13 @@ strap_fileunpack() {
   local file="$1"
   local dir="$2"
   local prog=tar
-  [ $(command -v bsdtar) ] && prog=bsdtar
 
   case $file in
     *.tar | *.tar.gz | *.tar.Z | *.tgz | *.tar.bz2 | *.tar.lz | *.tbz2 | *.tar.xz | *.txz | *.tar.lzma | *.zip | *.rpm)
       strap_msg "Unpacking: $file into $dir"
-      $prog -p -o -C $dir -xf $file
+      LANG=C $prog -p -o -C $dir -xf $file
       ;;
-    *)
+    * | *.nounpack | *.noextract)
       strap_msg "Copying: $file into $dir"
       cp $file $dir
       ;;
