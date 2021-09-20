@@ -11,8 +11,6 @@ source4="https://ftp.gnu.org/gnu/gmp/gmp-${gmp_version}.tar.xz"
 source5="http://isl.gforge.inria.fr/isl-${isl_version}.tar.xz"
 
 build() {
-  set -e
-
   cd gcc-${version} || exit
 
   step_msg "Symlinking needing libraries..."
@@ -48,16 +46,16 @@ build() {
     LD="ld.bfd"
 
   step_msg "Building gcc compiler only"
-  make -j "${STRAP_BUILD_JOBS}" all-gcc
+  make -j "${STRAP_BUILD_JOBS}" all-gcc || step_fail "Build standalone gcc compiler"
 
   step_msg "Installing gcc"
-  make -j "${STRAP_BUILD_JOBS}" install-gcc DESTDIR="${STRAP_INSTALL}"
+  make -j "${STRAP_BUILD_JOBS}" install-gcc DESTDIR="${STRAP_INSTALL}" || step_fail "Install gcc"
 
   step_msg "Building target libgcc"
-  make -j "${STRAP_BUILD_JOBS}" all-target-libgcc
+  make -j "${STRAP_BUILD_JOBS}" all-target-libgcc || step_fail "Build target libgcc"
 
   step_msg "Installing target libgcc"
-  make -j "${STRAP_BUILD_JOBS}" install-target-libgcc DESTDIR="${STRAP_INSTALL}"
+  make -j "${STRAP_BUILD_JOBS}" install-target-libgcc DESTDIR="${STRAP_INSTALL}" || step_fail "Install target libgcc"
 
   step_msg "Installing default compiler links"
   for i in "gcc" "g++"; do

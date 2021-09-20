@@ -3,8 +3,6 @@ version=5.13.6
 source1="https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-${version}.tar.xz"
 
 build() {
-  set -e
-
   cd linux-*
 
   step_msg "Configuring headers"

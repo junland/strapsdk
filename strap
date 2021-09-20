@@ -1,13 +1,13 @@
-#!/bin/bash
+#!/bin/bash -e
 
 trap 'catch_err $? $LINENO' ERR
 
 catch_err() {
-  echo "[STRAP FATEL ERROR] Caught error on line $1"
-  exit 1
+  if [ "$1" != "0" ]; then
+    # error handling goes here
+    echo "[STRAP FATEL ERROR] Caught error $1 on line $2"
+  fi
 }
-
-set -e
 
 source lib/libstep.sh
 source lib/libstrap.sh

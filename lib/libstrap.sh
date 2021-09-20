@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 strap_msg() {
   printf " >>>> %s\n" "$1"

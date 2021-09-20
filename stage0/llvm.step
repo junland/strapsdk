@@ -3,8 +3,6 @@ version=12.0.1
 source1="https://github.com/${name}/${name}-project/releases/download/llvmorg-${version}/${name}-project-${version}.src.tar.xz"
 
 build() {
-  set -e
-
   cd llvm-project-${version}.src/llvm
 
   mkdir -vp build && pushd build
@@ -108,4 +106,6 @@ build() {
   else
     step_msg "ld.lld already present, skipping"
   fi
+
+  rm -rf ${STRAP_BUILD}/llvm-project-${version}.src
 }
