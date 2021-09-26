@@ -12,8 +12,7 @@ export STRAP_TARGET_LDFLAGS=""
 export STRAP_STAGE1_LLVM_CFLAGS="-fPIC -O2 -pipe"
 
 # Toolchain variables
-export STRAP_TARGET_VENDOR=bootstrap
-export STRAP_TRIPLET_FULL="x86_64-${STRAP_TARGET_VENDOR}-linux"
+export STRAP_TRIPLET_FULL="x86_64-bootstrap-linux"
 
 # Kernel variables
 export STRAP_TARGET_KARCH="x86_64"
