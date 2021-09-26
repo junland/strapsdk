@@ -77,7 +77,7 @@ case $STRAP_SEL_CMD in
         exit 1
       fi
 
-      strap_msg "Running ${step} step..."
+      strap_msg "Setting up ${step} step..."
 
       # Load the step file
       source "${STRAP_CWD}"/"${STRAP_STAGE}"/"${step}".step
@@ -90,7 +90,13 @@ case $STRAP_SEL_CMD in
 
       # Run build function
       if test -n build; then
-        strap_msg "Running build function..."
+        strap_msg "Running build function for ${step} step..."
+
+        unset CFLAGS
+        unset CXXFLAGS
+        unset LDFLAGS
+        export CC="gcc"
+        export CXX="g++"
 
         cd ${STRAP_BUILD} && build || exit 1
       else
