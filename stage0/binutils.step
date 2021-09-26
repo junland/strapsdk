@@ -29,11 +29,11 @@ build() {
     --enable-static \
     --enable-ld=default \
     --enable-secureplt \
-    --enable-64-bit-bfd
+    --enable-64-bit-bfd || step_fail "Configure binutils"
 
   step_msg "Building ${name}"
-  make -j "${STRAP_BUILD_JOBS}" tooldir=/usr/binutils
+  make -j "${STRAP_BUILD_JOBS}" tooldir=/usr/binutils || step_fail "Build binutils"
 
   step_msg "Installing ${name}"
-  make -j "${STRAP_BUILD_JOBS}" tooldir=/usr/binutils install DESTDIR="${STRAP_INSTALL}"
+  make -j "${STRAP_BUILD_JOBS}" tooldir=/usr/binutils install DESTDIR="${STRAP_INSTALL}" || step_fail "Install binutils"
 }
