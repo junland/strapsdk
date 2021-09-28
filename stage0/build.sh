@@ -19,6 +19,9 @@ export STEPS_DIR=$(dirname $(realpath -s $0))
 # Check if the target variable is set
 test ! -z "$BUILD_TARGET" || stage_msg_failed "Build target is not set"
 
+stage_msg "Cleaning up any existing builds..."
+rm -rf "${STRAP_BUILD}" "${STRAP_SOURCES}" ${STRAP_INSTALL}
+
 stage_msg "Building stage0..."
 
 stage_msg "Creating needed directories..."

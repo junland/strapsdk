@@ -9,7 +9,7 @@ set -e
 
 . $(dirname $(realpath -s $0))/../lib/libstep.sh
 
-step_load_config $1
+step_load_target $1
 
 if [[ "${STRAP_TARGET_ARCH}" == "${STRAP_HOST_ARCH}" ]]; then
   step_msg "Skipping compiler-rt on native architecture"

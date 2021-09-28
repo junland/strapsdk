@@ -8,7 +8,7 @@ set -e
 
 . $(dirname $(realpath -s $0))/../lib/libstep.sh
 
-step_load_config $1
+step_load_target $1
 
 step_filedownload "$source1" "$STRAP_SOURCES"/"$(basename "$source1")"
 step_fileunpack "$STRAP_SOURCES"/"$(basename "$source1")" "$STRAP_BUILD" 
