@@ -1,0 +1,59 @@
+#!/bin/true
+
+. $(dirname $(realpath -s $0))/../lib/libstep.sh
+
+step_load_config $1
+
+name=llvm-compiler-rt
+main_name=llvm
+version=12.0.1
+source1="https://github.com/${main_name}/${main_name}-project/releases/download/llvmorg-${version}/${main_name}-project-${version}.src.tar.xz"
+
+if [[ "${STRAP_TARGET_ARCH}" == "${STRAP_HOST_ARCH}" ]]; then
+  step_msg "Skipping compiler-rt on native architecture"
+  return 0
+fi
+
+cd ${STRAP_BUILD}/llvm-project-${version}.src/compiler-rt || exit
+
+step_msg "Setting variables..."
+export PATH="${STRAP_INSTALL}/usr/bin:$PATH"
+export CC="clang"
+export CXX="clang++"
+export CFLAGS="${STRAP_TARGET_CFLAGS}"
+export CXXFLAGS="${STRAP_TARGET_CXXFLAGS}"
+export AR="llvm-ar"
+export RANLIB="llvm-ranlib"
+export STRIP="llvm-strip"
+
+step_msg "Configuring llvm compiler-rt builtins"
+mkdir -vp build && cd build || exit
+cmake ../ -G Ninja \
+  -DCOMPILER_RT_BUILD_BUILTINS=ON \
+  -DCOMPILER_RT_BUILD_SANITIZERS=OFF \
+  -DCOMPILER_RT_BUILD_XRAY=OFF \
+  -DCOMPILER_RT_BUILD_LIBFUZZER=OFF \
+  -DCOMPILER_RT_BUILD_PROFILE=OFF \
+  -DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON \
+  -DCMAKE_C_COMPILER_TARGET="${STRAP_TRIPLET}" \
+  -DCMAKE_ASM_COMPILER_TARGET="${STRAP_TRIPLET}" \
+  -DCMAKE_C_FLAGS="${CFLAGS}" \
+  -DCMAKE_ASM_FLAGS="${CFLAGS}" \
+  -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY \
+  -DCMAKE_C_COMPILER=clang \
+  -DCMAKE_CXX_COMPILER=clang++ \
+  -DCMAKE_AR="${STRAP_INSTALL}/usr/bin/ar" \
+  -DCMAKE_NM="${STRAP_INSTALL}/usr/bin/llvm-nm" \
+  -DCMAKE_RANLIB="${STRAP_INSTALL}/usr/bin/llvm-ranlib" \
+  -DCOMPILER_RT_STANDALONE_BUILD=ON \
+  -DCOMPILER_RT_INCLUDE_TESTS=OFF \
+  -DLLVM_CONFIG_PATH="${STRAP_INSTALL}/usr/bin/llvm-config"
+
+step_msg "Building llvm compiler-rt builtins"
+ninja -j "${STRAP_BUILD_JOBS}"
+
+step_msg "Installing compiler-rt builtins"
+install -D -d -m 00755 "${STRAP_INSTALL}/usr/lib/clang/${version}/lib/linux"
+install -v -m 00644 lib/linux/*.a "${STRAP_INSTALL}/usr/lib/clang/${version}/lib/linux/."
+install -v -m 00644 lib/linux/*.o "${STRAP_INSTALL}/usr/lib/clang/${version}/lib/linux/."
+
