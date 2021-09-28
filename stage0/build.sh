@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 . $(dirname $(realpath -s $0))/../lib/libstep.sh
 . $(dirname $(realpath -s $0))/../lib/libstrap.sh
 
