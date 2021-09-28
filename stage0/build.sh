@@ -17,7 +17,7 @@ export BUILD_TARGET="$1"
 export STEPS_DIR=$(dirname $(realpath -s $0))
 
 # Check if the target variable is set
-test -z "$BUILD_TARGET" || stage_msg_failed "Build target is not set"
+test ! -z "$BUILD_TARGET" || stage_msg_failed "Build target is not set"
 
 stage_msg "Building stage0..."
 
