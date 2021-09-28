@@ -15,6 +15,7 @@ STEPS=(
 
 export BUILD_TARGET="$1"
 export STEPS_DIR=$(dirname $(realpath -s $0))
+export STRAP_BUILD_JOBS=${BUILD_JOBS:-$(nproc)}
 
 # Check if the target variable is set
 test ! -z "$BUILD_TARGET" || stage_msg_failed "Build target is not set"
@@ -29,7 +30,7 @@ mkdir -vp "${STRAP_BUILD}" "${STRAP_INSTALL}" "${STRAP_SOURCES}"
 
 for step in ${STEPS[@]} ; do
     stage_msg "Running build step: $step"
-    /usr/bin/env -S -i STRAP_BUILD_JOBS=${STRAP_BUILD_JOBS:-$(nproc)} \
+    /usr/bin/env -S -i STRAP_BUILD_JOBS=${STRAP_BUILD_JOBS} \
              bash --norc --noprofile "${STEPS_DIR}/${step}.sh" "${BUILD_TARGET}" || stage_msg_failed "Building ${step} failed"
     stage_msg "Cleaning up build directory..."
     rm -rf "${STRAP_BUILD}"/*
