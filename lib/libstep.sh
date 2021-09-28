@@ -15,7 +15,7 @@ step_msg_green() {
 step_display_env() {
   step_msg "Current strap enviroment variables for step..."
 
-  local env=$(env | grep "STRAP" | sort | sed 's/=/ set as: /g' | sed 's/^/ ==> /g')
+  local env=$(env | grep "STRAP" | sort | sed 's/^/ ==> /g')
 
   echo "$env"
 }
