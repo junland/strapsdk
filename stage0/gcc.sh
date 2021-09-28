@@ -1,9 +1,5 @@
 #!/bin/true
 
-. $(dirname $(realpath -s $0))/../lib/libstep.sh
-
-step_load_config $1
-
 name=gcc
 version=11.2.0
 mpfr_version=4.1.0
@@ -16,20 +12,26 @@ source3="https://ftp.gnu.org/gnu/mpc/mpc-${mpc_version}.tar.gz"
 source4="https://ftp.gnu.org/gnu/gmp/gmp-${gmp_version}.tar.xz"
 source5="http://isl.gforge.inria.fr/isl-${isl_version}.tar.xz"
 
-stage_filedownload "$source1" "$STRAP_SOURCES"/"$(basename "$source1")"
-stage_fileunpack "$STRAP_SOURCES"/"$(basename "$source1")" "$STRAP_BUILD" 
+set -e
 
-stage_filedownload "$source2" "$STRAP_SOURCES"/"$(basename "$source2")"
-stage_fileunpack "$STRAP_SOURCES"/"$(basename "$source2")" "$STRAP_BUILD" 
+. $(dirname $(realpath -s $0))/../lib/libstep.sh
 
-stage_filedownload "$source3" "$STRAP_SOURCES"/"$(basename "$source3")"
-stage_fileunpack "$STRAP_SOURCES"/"$(basename "$source3")" "$STRAP_BUILD" 
+step_load_config $1
 
-stage_filedownload "$source4" "$STRAP_SOURCES"/"$(basename "$source4")"
-stage_fileunpack "$STRAP_SOURCES"/"$(basename "$source4")" "$STRAP_BUILD" 
+step_filedownload "$source1" "$STRAP_SOURCES"/"$(basename "$source1")"
+step_fileunpack "$STRAP_SOURCES"/"$(basename "$source1")" "$STRAP_BUILD" 
 
-stage_filedownload "$source5" "$STRAP_SOURCES"/"$(basename "$source5")"
-stage_fileunpack "$STRAP_SOURCES"/"$(basename "$source5")" "$STRAP_BUILD" 
+step_filedownload "$source2" "$STRAP_SOURCES"/"$(basename "$source2")"
+step_fileunpack "$STRAP_SOURCES"/"$(basename "$source2")" "$STRAP_BUILD" 
+
+step_filedownload "$source3" "$STRAP_SOURCES"/"$(basename "$source3")"
+step_fileunpack "$STRAP_SOURCES"/"$(basename "$source3")" "$STRAP_BUILD" 
+
+step_filedownload "$source4" "$STRAP_SOURCES"/"$(basename "$source4")"
+step_fileunpack "$STRAP_SOURCES"/"$(basename "$source4")" "$STRAP_BUILD" 
+
+step_filedownload "$source5" "$STRAP_SOURCES"/"$(basename "$source5")"
+step_fileunpack "$STRAP_SOURCES"/"$(basename "$source5")" "$STRAP_BUILD" 
 
 cd ${STRAP_BUILD}/gcc-${version} || exit
 

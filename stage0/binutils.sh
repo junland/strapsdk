@@ -1,17 +1,19 @@
 #!/bin/true
 
-. $(dirname $(realpath -s $0))/../lib/libstep.sh
-
-step_load_config $1
-
 name=binutils
 version=2.37
 source1="https://ftp.gnu.org/gnu/binutils/binutils-${version}.tar.bz2"
 
-stage_filedownload "$source1" "$STRAP_SOURCES"/"$(basename "$source1")"
-stage_fileunpack "$STRAP_SOURCES"/"$(basename "$source1")" "$STRAP_BUILD" 
+set -e
 
-cd ${STRAP_BUILD}/binutils-*
+. $(dirname $(realpath -s $0))/../lib/libstep.sh
+
+step_load_config $1
+
+step_filedownload "$source1" "$STRAP_SOURCES"/"$(basename "$source1")"
+step_fileunpack "$STRAP_SOURCES"/"$(basename "$source1")" "$STRAP_BUILD" 
+
+cd ${STRAP_BUILD}/binutils-${version}
 
 step_msg "Setting up enviroment variables..."
 

@@ -72,15 +72,15 @@ step_fileunpack() {
 
 # Load target file
 step_load_target() {
-  local file="$1"
+  local tgt="$1"
   # Check if file exists
-  if [ ! -f "$file" ]; then
-    step_msg_red "Target file $file does not exist"
+  if [ ! -f "$tgt" ]; then
+    step_msg_red "Target file for $tgt does not exist"
     return 1
   fi
 
-  step_msg "Loading target file: $file"
-  . $file
+  step_msg "Loading target: $tgt"
+  . ${STRAP_TARGET_DIR}/$tgt.tgt
 }
 
 umask 022
@@ -101,3 +101,4 @@ export STRAP_SOURCES=$STRAP_CWD/sources
 export STRAP_BUILD=$STRAP_CWD/build
 export STRAP_INSTALL=$STRAP_CWD/install
 export STRAP_BUILD_JOBS=${STRAP_BUILD_JOBS:-$(nproc)}
+export STRAP_TARGET_DIR=${STRAP_CWD}/target

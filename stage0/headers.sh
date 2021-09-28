@@ -1,17 +1,19 @@
 #!/bin/true
 
-. $(dirname $(realpath -s $0))/../lib/libstep.sh
-
-step_load_config $1
-
 name=headers
 version=5.13.6
 source1="https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-${version}.tar.xz"
 
-stage_filedownload "$source1" "$STRAP_SOURCES"/"$(basename "$source1")"
-stage_fileunpack "$STRAP_SOURCES"/"$(basename "$source1")" "$STRAP_BUILD" 
+set -e
 
-cd ${STRAP_BUILD}/linux-*
+. $(dirname $(realpath -s $0))/../lib/libstep.sh
+
+step_load_config $1
+
+step_filedownload "$source1" "$STRAP_SOURCES"/"$(basename "$source1")"
+step_fileunpack "$STRAP_SOURCES"/"$(basename "$source1")" "$STRAP_BUILD" 
+
+cd ${STRAP_BUILD}/linux-${version}
 
 step_msg "Configuring headers"
 

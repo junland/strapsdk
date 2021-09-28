@@ -1,18 +1,23 @@
 #!/bin/true
 
-. $(dirname $(realpath -s $0))/../lib/libstep.sh
-
-step_load_config $1
-
 name=llvm-compiler-rt
 main_name=llvm
 version=12.0.1
 source1="https://github.com/${main_name}/${main_name}-project/releases/download/llvmorg-${version}/${main_name}-project-${version}.src.tar.xz"
 
+set -e 
+
+. $(dirname $(realpath -s $0))/../lib/libstep.sh
+
+step_load_config $1
+
 if [[ "${STRAP_TARGET_ARCH}" == "${STRAP_HOST_ARCH}" ]]; then
   step_msg "Skipping compiler-rt on native architecture"
   return 0
 fi
+
+step_filedownload "$source1" "$STRAP_SOURCES"/"$(basename "$source1")"
+step_fileunpack "$STRAP_SOURCES"/"$(basename "$source1")" "$STRAP_BUILD" 
 
 cd ${STRAP_BUILD}/llvm-project-${version}.src/compiler-rt || exit
 

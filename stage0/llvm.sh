@@ -1,12 +1,17 @@
 #!/bin/true
 
+name=llvm
+version=12.0.1
+source1="https://github.com/${name}/${name}-project/releases/download/llvmorg-${version}/${name}-project-${version}.src.tar.xz"
+
+set -e 
+
 . $(dirname $(realpath -s $0))/../lib/libstep.sh
 
 step_load_config $1
 
-name=llvm
-version=12.0.1
-source1="https://github.com/${name}/${name}-project/releases/download/llvmorg-${version}/${name}-project-${version}.src.tar.xz"
+step_filedownload "$source1" "$STRAP_SOURCES"/"$(basename "$source1")"
+step_fileunpack "$STRAP_SOURCES"/"$(basename "$source1")" "$STRAP_BUILD" 
 
 cd ${STRAP_BUILD}/llvm-project-${version}.src/llvm
 
