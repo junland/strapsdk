@@ -13,7 +13,7 @@ step_load_target $1
 
 if [[ "${STRAP_TARGET_ARCH}" == "${STRAP_HOST_ARCH}" ]]; then
   step_msg "Skipping compiler-rt on native architecture"
-  return 0
+  exit 0
 fi
 
 step_filedownload "$source1" "$STRAP_SOURCES"/"$(basename "$source1")"
