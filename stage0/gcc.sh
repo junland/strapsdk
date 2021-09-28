@@ -49,8 +49,6 @@ export CXX="g++"
 export CFLAGS="-O2"
 export CXXFLAGS="-O2"
 
-step_display_stage_env
-
 step_msg "Configuring gcc"
 mkdir build && cd build
 ../configure --prefix=/usr \

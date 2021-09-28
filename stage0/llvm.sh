@@ -32,8 +32,6 @@ case ${STRAP_TARGET_LLVM_BACKEND} in
     ;;
 esac
 
-step_display_stage_env
-
 step_msg "Setting up configure options..."
 export main_llvm_opts="-DDEFAULT_SYSROOT="${STRAP_INSTALL}" \
     -DLLVM_TARGET_ARCH="${STRAP_TARGET_ARCH}" \

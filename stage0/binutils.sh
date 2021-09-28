@@ -25,8 +25,6 @@ export CXXFLAGS="-O2"
 
 step_msg "Configuring binutils"
 
-step_display_stage_env
-
 mkdir build && cd build
 ../configure --prefix=/usr/binutils \
   --target="${STRAP_TRIPLET_FULL}" \

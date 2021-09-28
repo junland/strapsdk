@@ -12,10 +12,10 @@ step_msg_green() {
   printf "\e[32m >>>> %s \n\e[0m" "$1"
 }
 
-step_display_step_env() {
-  step_msg "Displaying current strap enviroment variables..."
+step_display_env() {
+  step_msg "Current strap enviroment variables for step..."
 
-  local env=$(env | grep "STRAP" | sort | sed 's/=/ set as: /g')
+  local env=$(env | grep "STRAP" | sort | sed 's/=/ set as: /g' | sed 's/^/ ==> /g')
 
   echo "$env"
 }
@@ -81,6 +81,8 @@ step_load_target() {
 
   step_msg "Loading target: $tgt"
   . ${STRAP_TARGET_DIR}/$tgt.tgt
+
+  step_display_env
 }
 
 umask 022
