@@ -74,7 +74,7 @@ step_fileunpack() {
 step_load_target() {
   local tgt="$1"
   # Check if file exists
-  if [ ! -f "$tgt" ]; then
+  if [ ! -f ${STRAP_TARGET_DIR}/$tgt.tgt ]; then
     step_msg_red "Target file for $tgt does not exist"
     return 1
   fi

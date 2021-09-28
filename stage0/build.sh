@@ -28,6 +28,7 @@ stage_msg "Creating needed directories..."
 mkdir -vp "${STRAP_BUILD}" "${STRAP_INSTALL}" "${STRAP_SOURCES}"
 
 for step in ${STEPS[@]} ; do
+    stage_msg "Running build step: $step"
     /usr/bin/env -S -i STRAP_TARGET_FILE="${TARGET_FILE}" \
              bash --norc --noprofile "${STEPS_DIR}/${step}.sh" "${BUILD_TARGET}" || stage_msg_failed "Building ${step} failed"
     stage_msg "Cleaning up build directory..."
