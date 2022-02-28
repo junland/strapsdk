@@ -1,0 +1,6 @@
+alias ls='ls -F --color=auto'
+export PS1="\[\033[38;5;081m\]\u\[\033[38;5;245m\]@\[\033[38;5;206m\]\H \[\033[38;5;245m\]\w \[\033[38;5;081m\]$ \[\e[0m\]"
+
+echo -e "\n\nThis is just a test environment and does not represent the quality or content of the OS\nMany things are known to be currently broken.\n"
+echo -e "We will gradually introduce package management and new features over time."
+echo -e "This build has not been secured or optimised, do not use in production environments.\n"
