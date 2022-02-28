@@ -12,11 +12,13 @@ build_toolchain()
 	fi
 
 	msg "Preparing environment for build"
+	
 	make_environment
 
 	msg "Building cross-toolchain for '${STRAPY_BARCH}' architecture"
 
 	msg "Cleaning up"
+	
 	find "${tools}" -name "*.la" -print0 | xargs -0 rm -rf
 	find "${tools}" -name "*.pod" -print0 | xargs -0 rm -rf
 	find "${tools}" -name ".packlist" -print0 | xargs -0 rm -rf
@@ -68,13 +70,12 @@ main()
 
 	case "$mode" in
 		build_target)
-			check_for_root
 
 			if [ -z "$1" ]; then
 				die "Target is not specified."
 			fi
 
-			check_for_arch "STRAPY_$BARCH"
+			check_for_arch "$STRAPY_BARCH"
 
 			msg "Exporting variables"
 			export_variables "$STRAPY_BARCH"
